@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ref, onValue} from "firebase/database";
+import { db } from "./Firebase";
 import Home from "./Home";
 import Welcome from "./Welcome";
 import Navigation from "./Navigation";
@@ -9,7 +11,16 @@ import Register from "./Register";
 import Page404 from "./Page404";
 
 function App() {
-  const [user, setUser] = useState("ali");
+  const [user, setUser] = useState(null);
+  
+  useEffect(() => {
+    const reference = ref(db, 'user');
+    onValue(reference, (snapshot) => {
+      const currentUser = snapshot.val();
+      setUser(currentUser);
+    });
+  }, []);
+
   return (
     <main>
       <Router>
@@ -20,7 +31,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/meetings" element={<Meetings />} />
           <Route path="/register" element={<Register />} />
-          <Route path="*" element={<Page404 user={user} />} />
+          <Route path="*" element={<Page404 />} />
         </Routes>
       </Router>
     </main>

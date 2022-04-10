@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom"
 
 export default function Home({ user }) {
   return (
@@ -16,18 +17,18 @@ export default function Home({ user }) {
           </p>
           {!user && (
             <>
-              <a href="/register" className="btn btn-outline-primary me-2">
+              <Link to="/register" className="btn btn-outline-primary me-2">
                 Register
-              </a>
-              <a href="/login" className="btn btn-outline-primary me-2">
+              </Link>
+              <Link to="/login" className="btn btn-outline-primary me-2">
                 Login
-              </a>
+              </Link>
             </>
           )}
           {user && (
-            <a href="/meeting" className="btn btn-primary">
+            <Link to="/meetings" className="btn btn-primary">
               Meetings
-            </a>
+            </Link>
           )}
         </div>{" "}
         {/* columns */}
