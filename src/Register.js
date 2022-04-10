@@ -1,31 +1,59 @@
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import React, { useState, useEffect } from "react";
+import { auth } from "./Firebase";
+import FormError from "./FormError";
 
-function Register() {
-  const [userInfo, setUserInfo] = useState({
+function Register({ registerUser }) {
+  const [regInfo, setRegInfo] = useState({
     displayName: "",
     email: "",
     passOne: "",
     passTwo: "",
   });
 
+  const [errorMessage, setErrorMessage] = useState(null);
+
   function handleChange(e) {
     const itemName = e.target.name;
     const itemValue = e.target.value;
-    setUserInfo((prevState) => ({ ...prevState, [itemName]: itemValue }));
+    setRegInfo((prevState) => ({ ...prevState, [itemName]: itemValue}));
+  }
+  
+  useEffect(() => {
+    const errMessage = regInfo.passOne !== regInfo.passTwo ? "Password do not match" : null;
+    setErrorMessage(errMessage);
+  }, [regInfo]);
+
+  function handleSubmit(e) {
+    const registrationInfo = {};
+    if (regInfo.passOne !== regInfo.passTwo) {
+      setErrorMessage("Passwords do not match!");
+    } else {
+      registrationInfo.displayName = regInfo.displayName;
+      registrationInfo.email = regInfo.email;
+      registrationInfo.password = regInfo.passOne;
+      createUserWithEmailAndPassword(auth, registrationInfo.email, registrationInfo.password)
+        .then(() => {
+          registerUser(regInfo.displayName);
+        })
+        .catch(error => {
+          const errCode = error.code;
+          const errMessage = error.message;
+          setErrorMessage(`${errCode}: ${errMessage}`)
+        })
+    }
+    e.preventDefault();
   }
 
-  useEffect(() => {
-    console.log(userInfo);
-  }, [userInfo]);
-
   return (
-    <form className="mt-3">
+    <form className="mt-3" onSubmit={handleSubmit}>
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-md-8 col-lg-6">
             <div className="card bg-light">
               <div className="card-body">
                 <h3 className="fw-light mb-3">Register</h3>
+                {errorMessage && <FormError errorMessage={errorMessage} />}
                 <div className="mb-3 col-sm-12">
                   <label
                     className="form-label visually-hidden"
@@ -39,7 +67,7 @@ function Register() {
                     id="displayName"
                     placeholder="Display Name"
                     name="displayName"
-                    value={userInfo.displayName}
+                    value={regInfo.displayName}
                     onChange={handleChange}
                     required
                   ></input>
@@ -54,7 +82,7 @@ function Register() {
                     id="email"
                     placeholder="Email Address"
                     name="email"
-                    value={userInfo.email}
+                    value={regInfo.email}
                     onChange={handleChange}
                     required
                   ></input>
@@ -66,7 +94,7 @@ function Register() {
                       type="password"
                       name="passOne"
                       placeholder="Password"
-                      value={userInfo.passOne}
+                      value={regInfo.passOne}
                       onChange={handleChange}
                     />
                   </div>
@@ -76,7 +104,7 @@ function Register() {
                       type="password"
                       placeholder="Repeat Password"
                       name="passTwo"
-                      value={userInfo.passTwo}
+                      value={regInfo.passTwo}
                       onChange={handleChange}
                       required
                     />
