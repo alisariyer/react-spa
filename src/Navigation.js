@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { FaUsers } from "react-icons/fa";
 
-export default function Navigation({ user }) {
+export default function Navigation({ user, logOutUser }) {
     return (
         <nav className="navbar navbar-expand bg-primary navbar-dark">
             <div className="container-fluid">
@@ -19,7 +19,7 @@ export default function Navigation({ user }) {
                     {!user && <Link className="nav-item nav-link" to="/login">
                         log in
                     </Link>}
-                    {user && <Link className="nav-item nav-link" to="/logout">
+                    {user && <Link className="nav-item nav-link" to="/logout" onClick={e => logOutUser(e)}>
                         log out
                     </Link>}
                 </ul>
