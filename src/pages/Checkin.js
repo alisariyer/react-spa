@@ -22,7 +22,8 @@ function Checkin() {
     e.preventDefault();
     push(ref(db, `meetings/${userId}/${meetingId}/attendees`), {
       attendeeName: credentials.displayName,
-      attendeeEmail: credentials.email
+      attendeeEmail: credentials.email,
+      star: false
     }).then(() => navigate(`/attendees/${userId}/${meetingId}`))
     .catch((e) => console.log(e))
   }

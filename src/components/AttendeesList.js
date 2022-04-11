@@ -1,6 +1,6 @@
 import React from "react";
-import { GoTrashcan } from "react-icons/go";
-import { ref, remove } from "firebase/database";
+import { GoTrashcan, GoStar } from "react-icons/go";
+import { ref, remove, update } from "firebase/database";
 import { db } from "../Firebase";
 
 export default function AttendeesList({
@@ -16,6 +16,12 @@ export default function AttendeesList({
     remove(ref(db, `meetings/${adminUser}/${whichMeeting}/attendees/${whichAttendee}`))
   }
 
+  function toggleStar(e, star, whichMeeting, whichAttendee) {
+    e.preventDefault();
+    update(ref(db, `meetings/${adminUser}/${whichMeeting}/attendees/${whichAttendee}`),  
+      { star: star === undefined ? true : !star})
+  }
+
   const myAttendees = attendees.map((attendee) => (
     <div
       key={attendee.attendeeId}
@@ -29,6 +35,13 @@ export default function AttendeesList({
         >
           {isAdmin && (
             <div className="btn-group pe-2">
+              <button 
+                className={`btn btn-sm ${attendee.star ? 'btn-info' : 'btn-outline-secondary'}`}
+                title="Give user a star"
+                onClick={e => toggleStar(e, attendee.star, meetingId, attendee.attendeeId)}
+              >
+                <GoStar />
+              </button>
               <button 
                 className="btn btn-sm btn-outline-secondary" 
                 title="Delete Attendee"
