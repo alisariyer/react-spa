@@ -1,7 +1,7 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import React, { useState, useEffect } from "react";
-import { auth } from "./Firebase";
-import FormError from "./FormError";
+import { auth } from "../Firebase";
+import FormError from "../components/FormError";
 
 function Register({ registerUser }) {
   const [regInfo, setRegInfo] = useState({

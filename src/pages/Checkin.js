@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { db } from "./Firebase";
+import { db } from "../Firebase";
 import { push, ref } from "firebase/database";
 
 function Checkin() {

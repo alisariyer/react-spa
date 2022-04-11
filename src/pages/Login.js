@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth } from "./Firebase";
+import { auth } from "../Firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import FormError from "./FormError";
+import FormError from "../components/FormError";
 
 function Login() {
 

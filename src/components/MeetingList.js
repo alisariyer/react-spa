@@ -1,6 +1,6 @@
 import React from "react";
 import { ref, remove } from "firebase/database";
-import { db } from "./Firebase";
+import { db } from "../Firebase";
 import { useNavigate } from "react-router-dom";
 import { GoTrashcan } from "react-icons/go";
 import { FaLink } from "react-icons/fa";

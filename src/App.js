@@ -3,14 +3,14 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import { onValue, push, ref } from "firebase/database";
 import { db, auth } from "./Firebase";
 import { onAuthStateChanged, signOut, updateProfile } from "firebase/auth";
-import Home from "./Home";
-import Welcome from "./Welcome";
-import Navigation from "./Navigation";
-import Login from "./Login";
-import Meetings from "./Meetings";
-import Register from "./Register";
-import Checkin from "./Checkin";
-import Page404 from "./Page404";
+import Home from "./pages/Home";
+import Welcome from "./pages/Welcome";
+import Navigation from "./components/Navigation";
+import Login from "./pages/Login";
+import Meetings from "./components/Meetings";
+import Register from "./pages/Register";
+import Checkin from "./pages/Checkin";
+import Page404 from "./pages/Page404";
 
 function App() {
   const navigate = useNavigate();
