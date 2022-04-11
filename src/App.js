@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
-import { ref, onValue } from "firebase/database";
+import { onValue, push, ref } from "firebase/database";
 import { db, auth } from "./Firebase";
 import { onAuthStateChanged, signOut, updateProfile } from "firebase/auth";
 import Home from "./Home";
@@ -9,25 +9,21 @@ import Navigation from "./Navigation";
 import Login from "./Login";
 import Meetings from "./Meetings";
 import Register from "./Register";
+import Checkin from "./Checkin";
 import Page404 from "./Page404";
-import { signInWithEmailAndPassword } from "firebase/auth";
 
 function App() {
   const navigate = useNavigate();
 
-  const [userInfo, setUserInfo] = useState({
-    user: "",
-    displayName: "",
-    userId: "",
+  const resetUserInfo = () => ({user: null, displayName: null, userId: null});
+
+  const [userInfo, setUserInfo] = useState(() => resetUserInfo());
+  const [meetings, setMeetings] = useState({
+    meetingList: [],
+    numberOfMeetings: 0,
   });
 
   useEffect(() => {
-    // const reference = ref(db, 'user');
-    // onValue(reference, (snapshot) => {
-    //   const currentUser = snapshot.val();
-    //   setUserInfo(currentUser);
-    // });
-
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setUserInfo({
@@ -35,9 +31,28 @@ function App() {
           displayName: user.displayName,
           userId: user.uid,
         });
+
+        const meetingRef = ref(db, `meetings/${user.uid}`);
+        onValue(meetingRef, (snapshot) => {
+          const meetings = snapshot.val();
+          const meetingList = []
+          for (let item in meetings) {
+            meetingList.push({
+              meetingId: item,
+              meetingName: meetings[item].meetingName
+            })
+          }
+          setMeetings({meetingList: meetingList, numberOfMeetings: meetingList.length})
+        });
+      } else {
+        setUserInfo(resetUserInfo())
       }
     });
   }, []);
+
+  useEffect(() => {
+    console.log(meetings);
+  }, [meetings])
 
   function registerUser(userName) {
     updateProfile(auth.currentUser, {
@@ -55,17 +70,20 @@ function App() {
 
   function logOutUser(e) {
     e.preventDefault();
-    setUserInfo({
-      user: null,
-      displayName: null,
-      userId: null,
-    });
+    setUserInfo(resetUserInfo());
     signOut(auth)
       .then(() => {
         console.log("suceessfully signed out");
         navigate("/login", { replace: true });
       })
       .catch((e) => console.log(e));
+  }
+
+  function addMeeting(meetingName) {
+    push(ref(db, `meetings/${userInfo.user.uid}`), {
+      meetingName: meetingName
+    }).then(() => console.log('pushed')).catch(err => console.log(err))
+
   }
 
   return (
@@ -75,7 +93,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Home user={userInfo.user} />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/meetings" element={<Meetings />} />
+        <Route path="/meetings" element={<Meetings addMeeting={addMeeting} meetings={meetings} userId={userInfo.userId}/>} />
+        <Route path="/checkin/:userId/:meetingId" element={<Checkin />} />
         <Route
           path="/register"
           element={<Register registerUser={registerUser} />}
