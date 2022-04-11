@@ -2,7 +2,7 @@ import React from "react";
 import { ref, remove } from "firebase/database";
 import { db } from "../Firebase";
 import { useNavigate } from "react-router-dom";
-import { GoTrashcan } from "react-icons/go";
+import { GoTrashcan, GoListUnordered } from "react-icons/go";
 import { FaLink } from "react-icons/fa";
 
 export default function MeetingList({ meetings, userId }) {
@@ -16,7 +16,7 @@ export default function MeetingList({ meetings, userId }) {
             .catch((e) => console.error(e))
     }
 
-    const myMeetings = meetings.map((meeting, index) => (
+    const myMeetings = meetings.map((meeting) => (
         <li className="list-group-item list-group-item-action d-flex align-items-center" key={meeting.meetingId} >
             <div className="btn-group me-2" role="group" aria-label="Meeting options">
                 <button 
@@ -32,6 +32,13 @@ export default function MeetingList({ meetings, userId }) {
                     onClick={() => navigate(`/checkin/${userId}/${meeting.meetingId}`)}
                 >
                     <FaLink />
+                </button>
+                <button 
+                    className="btn btn-sm btn-outline-secondary"
+                    title="Attendees List"
+                    onClick={() => navigate(`/attendees/${userId}/${meeting.meetingId}`)}
+                >
+                    <GoListUnordered />
                 </button>
             </div>
             {meeting.meetingName}

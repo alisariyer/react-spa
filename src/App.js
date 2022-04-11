@@ -51,10 +51,6 @@ function App() {
     });
   }, []);
 
-  useEffect(() => {
-    console.log(meetings);
-  }, [meetings])
-
   function registerUser(userName) {
     updateProfile(auth.currentUser, {
       displayName: userName,

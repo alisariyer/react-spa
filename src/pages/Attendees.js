@@ -2,29 +2,29 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { onValue, ref } from "firebase/database";
 import { db } from "../Firebase";
+import AttendeesList from "../components/AttendeesList";
 
-export default function Attendees() {
+export default function Attendees({ adminUser }) {
 
     const { userId, meetingId } = useParams();
-    console.log(userId, meetingId);
     const [displayAttendees, setDisplayAttendees] = useState([]);
 
     useEffect(() => {
         const attendeesRef = ref(db, `meetings/${userId}/${meetingId}/attendees`) 
-        const attendeesList = []
         onValue(attendeesRef, (snapshot) => {
             const attendees = snapshot.val();
+            const attendeesList = []
             for (let item in attendees) {
                 attendeesList.push({
-                    atteendeeId: item,
+                    attendeeId: item,
                     attendeeName: attendees[item].attendeeName,
                     attendeeEmail: attendees[item].attendeeEmail
                 })
             }
+            setDisplayAttendees(attendeesList);
         })
-        setDisplayAttendees(attendeesList);
-        console.log(attendeesList)
     }, []);
+
     return (
         <div className="container mt-4">
             <div className="row justify-content-center">
@@ -34,7 +34,12 @@ export default function Attendees() {
                     </h1>
                 </div>
             </div>
-            List goes here
+            <AttendeesList
+                attendees={displayAttendees}
+                userId={userId}
+                adminUser={adminUser}
+                meetingId={meetingId}
+            />
         </div>
     )
 }
