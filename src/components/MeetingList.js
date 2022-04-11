@@ -11,7 +11,7 @@ export default function MeetingList({ meetings, userId }) {
 
     function deleteMeeting(e, meetingId) {
         e.preventDefault();
-        remove(ref(db, `users/${userId}/${meetingId}`))
+        remove(ref(db, `meetings/${userId}/${meetingId}`))
             .then(() => console.log('removed'))
             .catch((e) => console.error(e))
     }

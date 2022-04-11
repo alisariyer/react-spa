@@ -10,6 +10,7 @@ import Login from "./pages/Login";
 import Meetings from "./components/Meetings";
 import Register from "./pages/Register";
 import Checkin from "./pages/Checkin";
+import Attendees from "./pages/Attendees";
 import Page404 from "./pages/Page404";
 
 function App() {
@@ -94,6 +95,7 @@ function App() {
         <Route path="/" element={<Home user={userInfo.user} />} />
         <Route path="/login" element={<Login />} />
         <Route path="/meetings" element={<Meetings addMeeting={addMeeting} meetings={meetings} userId={userInfo.userId}/>} />
+        <Route path="/attendees/:userId/:meetingId" element={<Attendees adminUser={userInfo.userId}/>} />
         <Route path="/checkin/:userId/:meetingId" element={<Checkin />} />
         <Route
           path="/register"
