@@ -1,5 +1,5 @@
 import React from "react";
-import { GoTrashcan, GoStar } from "react-icons/go";
+import { GoTrashcan, GoStar, GoMail } from "react-icons/go";
 import { ref, remove, update } from "firebase/database";
 import { db } from "../Firebase";
 
@@ -42,6 +42,13 @@ export default function AttendeesList({
               >
                 <GoStar />
               </button>
+              <a
+                href={`mailto:${attendee.attendeeEmail}`}
+                className="btn btn-sm btn-outline-secondary"
+                title="Mail Attendee"
+              >
+                <GoMail />
+              </a>
               <button 
                 className="btn btn-sm btn-outline-secondary" 
                 title="Delete Attendee"
